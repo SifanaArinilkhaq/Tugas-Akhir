@@ -21,9 +21,10 @@ class RekeningController extends Controller
 
     public function store(Request $request)
     {
+        $pemilik_id = auth()->user()->id;
         /**CREATE REKENING INI BELUM ADA VALIDASINYA
          * 
-         * Coba kamu bikin validasi buat create rekening
+         * bikin validasi buat create rekening
          * CONTOHNYA BISA LIAT DI StoreController.php
          * 
          * */
@@ -33,11 +34,20 @@ class RekeningController extends Controller
         ];
         
         $customAttributes = [
-            'nama' => 'Nama'
+            'nama_bank'     => 'Nama Bank',
+            'no_rekening'   => 'No Rekening',
+            'nama_pemilik'  => 'Nama Pemilik',
         ];
+        /**
+         * rule validasi (contoh: required->harus di isi, nanti kamu lanjutin kolom yg belum ada validasinya)
+         * contohnya lainnya lihat validasi usercontroller
+         * atau liat di dokumentasi validation laravel.com
+        */
 
         $valid = $request->validate([
-            'nama kolom' => 'rule validasi',
+            'nama_bank'     => 'required',
+            'no_rekening'   => 'required',
+            'nama_pemilik'  => 'required'
         ],$messages,$customAttributes);
 
         $pemilik_id = auth()->user()->id;
@@ -70,18 +80,25 @@ class RekeningController extends Controller
         ];
         
         $customAttributes = [
-            'nama' => 'Nama',
+            'nama_bank'     => 'Nama Bank',
+            'no_rekening'   => 'No Rekening',
+            'nama_pemilik'  => 'Nama Pemilik',
         ];
 
         $valid = $request->validate([
-            'nama' => 'required'
+            'nama_bank'     => 'required',
+            'no_rekening'   => 'required',
+            'nama_pemilik'  => 'required'
         ],$messages,$customAttributes);
 
         //Cek Validasi
         if($valid == true){
-            $rekening = Rekening::find($id); //untuk mencari data berdasarkan id
-
-            //Coba kamu terusin, sama kaya yg di controller StoreController
+            $rekening = Rekening::find($id);
+             //untuk mencari data berdasarkan id
+             $rekening->nama_bank = $request->nama_bank;
+             $rekening->no_rekening = $request->no_rekening;
+             $rekening->nama_pemilik = $request->nama_pemilik;
+             $rekening->save();
             // $rekening->nama = $request->nama;
             // $rekening->save();
             
